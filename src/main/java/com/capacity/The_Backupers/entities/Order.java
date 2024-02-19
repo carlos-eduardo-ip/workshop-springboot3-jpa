@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "tb-Order")
+@Table(name = "tb_Order")
 public class Order implements Serializable {
 
     @Id
