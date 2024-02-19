@@ -3,8 +3,11 @@ package com.capacity.The_Backupers.services;
 
 import com.capacity.The_Backupers.entities.User;
 import com.capacity.The_Backupers.repositories.UserRepository;
+import com.capacity.The_Backupers.services.exceptions.DatabaseException;
 import com.capacity.The_Backupers.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +32,16 @@ public class UserService {
         return repository.save(obj);
     }
 
-    public void delet (Long id){
-        repository.deleteById(id);
+    public void delete(Long id){
+        try {
+            if (repository.existsById(id)) {
+                repository.deleteById(id);
+            } else {
+                throw new ResourceNotFoundException(id);
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User obj){
